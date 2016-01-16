@@ -13,7 +13,7 @@
 #define DBG(format, ...) do { } while(0)
 #endif
 
-// if MQTT_1_CLIENT is defined we only support the one client that is built into esp-link.
+// if MQTT_1_CLIENT is defined we only support the one client that is built into NMEA-link.
 // this keeps everything simpler. Undefining it brings back old code that supports creating
 // a new client and setting all its params. Most likely that old code no longer works...
 #define MQTT_1_CLIENT

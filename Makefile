@@ -1,6 +1,7 @@
 #
-# Makefile for esp-link - https://github.com/jeelabs/esp-link
+# Makefile for NMEA-link - https://github.com/jcable/nmea-link
 #
+# Makefile adapted to nmea-link by Julian Cable
 # Makefile heavily adapted to esp-link and wireless flashing by Thorsten von Eicken
 # Lots of work, in particular to support windows, by brunnels
 # Original from esphttpd and others...
@@ -16,7 +17,7 @@
 # optional local configuration file
 -include local.conf
 
-# The Wifi station configuration can be hard-coded here, which makes esp-link come up in STA+AP
+# The Wifi station configuration can be hard-coded here, which makes NMEA-link come up in STA+AP
 # mode trying to connect to the specified AP *only* if the flash wireless settings are empty!
 # This happens on a full serial flash and avoids having to hunt for the AP...
 # STA_SSID ?= 
@@ -39,14 +40,14 @@ ESPTOOL		?= $(abspath ../esp-open-sdk/esptool/esptool.py)
 ESPPORT		?= /dev/ttyUSB0
 ESPBAUD		?= 460800
 
-# The Wifi station configuration can be hard-coded here, which makes esp-link come up in STA+AP
+# The Wifi station configuration can be hard-coded here, which makes NMEA-link come up in STA+AP
 # mode trying to connect to the specified AP *only* if the flash wireless settings are empty!
 # This happens on a full serial flash and avoids having to hunt for the AP...
 # STA_SSID ?= 
 # STA_PASS ?= 
 
 # hostname or IP address for wifi flashing
-ESP_HOSTNAME        ?= esp-link
+ESP_HOSTNAME        ?= nmea-link
 
 # --------------- chipset configuration   ---------------
 
@@ -64,9 +65,9 @@ LED_CONN_PIN        ?= 0
 # GPIO pin used for "serial activity" LED, active low
 LED_SERIAL_PIN      ?= 14
 
-# --------------- esp-link config options ---------------
+# --------------- nmea-link config options ---------------
 
-# If CHANGE_TO_STA is set to "yes" the esp-link module will switch to station mode
+# If CHANGE_TO_STA is set to "yes" the NMEA-link module will switch to station mode
 # once successfully connected to an access point. Else it will stay in AP+STA mode.
 
 CHANGE_TO_STA ?= yes
@@ -151,19 +152,19 @@ ET_FF               ?= 80m     # 80Mhz flash speed in esptool flash command
 ET_BLANK            ?= 0x3FE000 # where to flash blank.bin to erase wireless settings
 endif
 
-# --------------- esp-link version        ---------------
+# --------------- NMEA-link version        ---------------
 
-# This queries git to produce a version string like "esp-link v0.9.0 2015-06-01 34bc76"
+# This queries git to produce a version string like "NMEA-link v0.9.0 2015-06-01 34bc76"
 # If you don't have a proper git checkout or are on windows, then simply swap for the constant
 # Steps to release: create release on github, git pull, git describe --tags to verify you're
-# on the release tag, make release, upload esp-link.tgz into the release files
-#VERSION ?= "esp-link custom version"
+# on the release tag, make release, upload nmea-link.tgz into the release files
+#VERSION ?= "NMEA-link custom version"
 DATE    := $(shell date '+%F %T')
 BRANCH  ?= $(shell if git diff --quiet HEAD; then git describe --tags; \
                    else git symbolic-ref --short HEAD; fi)
 SHA     := $(shell if git diff --quiet HEAD; then git rev-parse --short HEAD | cut -d"/" -f 3; \
                    else echo "development"; fi)
-VERSION ?=esp-link $(BRANCH) - $(DATE) - $(SHA)
+VERSION ?=NMEA-link $(BRANCH) - $(DATE) - $(SHA)
 
 # Output directors to store intermediate compiled files
 # relative to the project directory
@@ -193,7 +194,7 @@ endif
 
 # which modules (subdirectories) of the project to include in compiling
 LIBRARIES_DIR 	= libraries
-MODULES		  	+= espfs httpd user serial cmd esp-link
+MODULES		  	+= espfs httpd user serial cmd nmea-link
 MODULES			+= $(foreach sdir,$(LIBRARIES_DIR),$(wildcard $(sdir)/*))
 EXTRA_INCDIR 	= include .
 
@@ -422,13 +423,13 @@ espfs/mkespfsimage/mkespfsimage: espfs/mkespfsimage/
 	$(Q) $(MAKE) -C espfs/mkespfsimage GZIP_COMPRESSION="$(GZIP_COMPRESSION)"
 
 release: all
-	$(Q) rm -rf release; mkdir -p release/esp-link-$(BRANCH)
-	$(Q) egrep -a 'esp-link [a-z0-9.]+ - 201' $(FW_BASE)/user1.bin | cut -b 1-80
-	$(Q) egrep -a 'esp-link [a-z0-9.]+ - 201' $(FW_BASE)/user2.bin | cut -b 1-80
+	$(Q) rm -rf release; mkdir -p release/nmea-link-$(BRANCH)
+	$(Q) egrep -a 'nmea-link [a-z0-9.]+ - 201' $(FW_BASE)/user1.bin | cut -b 1-80
+	$(Q) egrep -a 'nmea-link [a-z0-9.]+ - 201' $(FW_BASE)/user2.bin | cut -b 1-80
 	$(Q) cp $(FW_BASE)/user1.bin $(FW_BASE)/user2.bin $(SDK_BASE)/bin/blank.bin \
-		   "$(SDK_BASE)/bin/boot_v1.4(b1).bin" wiflash avrflash release/esp-link-$(BRANCH)
-	$(Q) tar zcf esp-link-$(BRANCH).tgz -C release esp-link-$(BRANCH)
-	$(Q) echo "Release file: esp-link-$(BRANCH).tgz"
+		   "$(SDK_BASE)/bin/boot_v1.4(b1).bin" wiflash avrflash release/nmea-link-$(BRANCH)
+	$(Q) tar zcf nmea-link-$(BRANCH).tgz -C release nmea-link-$(BRANCH)
+	$(Q) echo "Release file: nmea-link-$(BRANCH).tgz"
 	$(Q) rm -rf release
 
 clean:
