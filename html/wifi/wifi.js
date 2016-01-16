@@ -111,7 +111,7 @@ function getStatus() {
         blockScan = 0;
 
   if (data.modechange == "yes") {
-    var txt2 = "esp-link will switch to STA-only mode in a few seconds";
+    var txt2 = "NMEA-link will switch to STA-only mode in a few seconds";
     window.setTimeout(function() { showNotification(txt2); }, 4000);
   }
 

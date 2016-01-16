@@ -13,7 +13,7 @@ FlashConfig flashDefault = {
   .reset_pin    = MCU_RESET_PIN, .isp_pin = MCU_ISP_PIN,
   .conn_led_pin = LED_CONN_PIN, .ser_led_pin = LED_SERIAL_PIN,
   .baud_rate    = 115200,
-  .hostname     = "esp-link\0",
+  .hostname     = "nmea-link\0",
   .staticip     = 0,
   .netmask      = 0x00ffffff,
   .gateway      = 0,
@@ -132,7 +132,7 @@ bool ICACHE_FLASH_ATTR configRestore(void) {
     os_sprintf(chipIdStr, "%06x", system_get_chip_id());
 #ifdef CHIP_IN_HOSTNAME
     char hostname[16];
-    os_strcpy(hostname, "esp-link-");
+    os_strcpy(hostname, "nmea-link-");
     os_strcat(hostname, chipIdStr);
     os_memcpy(&flashConfig.hostname, hostname, os_strlen(hostname));
 #endif

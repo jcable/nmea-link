@@ -237,7 +237,7 @@ REST_Setup(CmdPacket *cmd) {
   os_sprintf((char *)client->content_type, "x-www-form-urlencoded");
 
   client->user_agent = (char*)os_zalloc(9);
-  os_sprintf((char *)client->user_agent, "esp-link");
+  os_sprintf((char *)client->user_agent, "nmea-link");
 
   client->pCon = (struct espconn *)os_zalloc(sizeof(struct espconn));
   client->pCon->proto.tcp = (esp_tcp *)os_zalloc(sizeof(esp_tcp));

@@ -492,7 +492,7 @@ syslog_compose(uint8_t facility, uint8_t severity, const char *tag, const char *
       *
   * TIMESTAMP:	realtime_clock == 0 ? timertick / 10⁶ : realtime_clock
   * HOSTNAME	hostname
-  * APPNAME:	ems-esp-link
+  * APPNAME:	ems-nmea-link
   * PROCID:		timertick
   * MSGID:		NILVALUE
   *

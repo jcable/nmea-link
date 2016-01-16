@@ -1,4 +1,4 @@
-// Copyright (c) 2015 by Thorsten von Eicken, see LICENSE.txt in the esp-link repo
+// Copyright (c) 2015 by Thorsten von Eicken, see LICENSE.txt in the nmea-link repo
 
 #include <esp8266.h>
 #include <osapi.h>

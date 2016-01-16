@@ -20,16 +20,16 @@ The meaning of TIMESTAMP, HOSTNAME, PROCID and MSGID is hardcoded, all others ar
 syslog messages are queued on heap until the Wifi stack is fully initialized:
 
 ```
-Jan  1 00:00:00 192.168.254.82 esp_link 0.126850 1 Reset cause: 4=restart
-Jan  1 00:00:00 192.168.254.82 esp_link 0.133970 2 exccause=0 epc1=0x0 epc2=0x0 epc3=0x0 excvaddr=0x0 depc=0x0
-Jan  1 00:00:00 192.168.254.82 esp_link 0.151069 3 Flash map 4MB:512/512, manuf 0xC8 chip 0x4016
-Jan  1 00:00:00 192.168.254.82 esp_link 0.166935 4 ** esp-link ready
-Jan  1 00:00:00 192.168.254.82 esp_link 0.185586 5 initializing MQTT
-Jan  1 00:00:00 192.168.254.82 esp_link 0.200681 6 initializing user application
-Jan  1 00:00:00 192.168.254.82 esp_link 0.215169 7 waiting for work to do...
+Jan  1 00:00:00 192.168.254.82 nmea_link 0.126850 1 Reset cause: 4=restart
+Jan  1 00:00:00 192.168.254.82 nmea_link 0.133970 2 exccause=0 epc1=0x0 epc2=0x0 epc3=0x0 excvaddr=0x0 depc=0x0
+Jan  1 00:00:00 192.168.254.82 nmea_link 0.151069 3 Flash map 4MB:512/512, manuf 0xC8 chip 0x4016
+Jan  1 00:00:00 192.168.254.82 nmea_link 0.166935 4 ** nmea-link ready
+Jan  1 00:00:00 192.168.254.82 nmea_link 0.185586 5 initializing MQTT
+Jan  1 00:00:00 192.168.254.82 nmea_link 0.200681 6 initializing user application
+Jan  1 00:00:00 192.168.254.82 nmea_link 0.215169 7 waiting for work to do...
 Jan  1 00:00:03 192.168.254.82 SYSLOG 3.325626 8 syslogserver: 192.168.254.216:514
-Jan  1 00:00:03 192.168.254.82 esp_link 3.336756 9 syslog_init: host: 192.168.254.216, port: 514, lport: 24377, state: 4
-Dec 15 11:49:14 192.168.254.82 esp-link 18.037949 10 Accept port 23, conn=3fff5f68, pool slot 0
+Jan  1 00:00:03 192.168.254.82 nmea_link 3.336756 9 syslog_init: host: 192.168.254.216, port: 514, lport: 24377, state: 4
+Dec 15 11:49:14 192.168.254.82 nmea-link 18.037949 10 Accept port 23, conn=3fff5f68, pool slot 0
 ```
 
 If the remaining heap size reaches a given limit, syslog will add a final obituary
@@ -120,16 +120,16 @@ usage: `syslog(uint8_t facility, uint8_t severity, const char *tag, const char *
 Examples
 ========
     hostname="ems-link02", showtick=0, showdate=0
-    Syslog message: USER.NOTICE:  - ems-link02 esp_link - 20 syslog_init: host: 192.168.254.216, port: 514, lport: 28271, rsentcb: 40211e08, state: 4\n
+    Syslog message: USER.NOTICE:  - ems-link02 nmea_link - 20 syslog_init: host: 192.168.254.216, port: 514, lport: 28271, rsentcb: 40211e08, state: 4\n
 
     hostname="ems-link02", showtick=1, showdate=0
-    Syslog message: USER.NOTICE:  - ems-link02 esp_link 3.325677 8 syslog_init: host: 192.168.254.216, port: 514, lport: 19368, rsentcb: 40211e08, state: 4\n
+    Syslog message: USER.NOTICE:  - ems-link02 nmea_link 3.325677 8 syslog_init: host: 192.168.254.216, port: 514, lport: 19368, rsentcb: 40211e08, state: 4\n
 
     hostname="ems-link02", showtick=1, showdate=1, NTP not available
-    Syslog message: USER.NOTICE:  1970-01-01T00:00:03.325668Z ems-link02 esp_link 3.325668 8 syslog_init: host: 192.168.254.216, port: 514, lport: 36802, rsentcb: 40211e08, state: 4\n
+    Syslog message: USER.NOTICE:  1970-01-01T00:00:03.325668Z ems-link02 nmea_link 3.325668 8 syslog_init: host: 192.168.254.216, port: 514, lport: 36802, rsentcb: 40211e08, state: 4\n
 
     hostname="ems-link02", showtick=1, showdate=1, NTP available
-    Syslog message: USER.NOTICE:  2015-12-15T11:15:29+00:00 ems-link02 esp_link 182.036860 13 syslog_init: host: 192.168.254.216, port: 514, lport: 43626, rsentcb: 40291db8, state: 4\n
+    Syslog message: USER.NOTICE:  2015-12-15T11:15:29+00:00 ems-link02 nmea_link 182.036860 13 syslog_init: host: 192.168.254.216, port: 514, lport: 43626, rsentcb: 40291db8, state: 4\n
 
 Notes
 =====

@@ -107,7 +107,7 @@ void user_rf_pre_init(void) {
   system_set_os_print(DEBUG_SDK);
 }
 
-// Main routine to initialize esp-link.
+// Main routine to initialize NMEA-link.
 void user_init(void) {
   // get the flash config so we know how to init things
 //  configWipe(); // uncomment to reset the config for testing purposes
@@ -174,7 +174,7 @@ void user_init(void) {
   uint32_t fid = spi_flash_get_id();
   NOTICE("Flash map %s, manuf 0x%02lX chip 0x%04lX", flash_maps[system_get_flash_size_map()],
       fid & 0xff, (fid&0xff00)|((fid>>16)&0xff));
-  NOTICE("** esp-link ready");
+  NOTICE("** NMEA-link ready");
 
   cgiServicesSNTPInit();
 

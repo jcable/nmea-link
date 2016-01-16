@@ -4,12 +4,12 @@
     </div>
 
     <div class="content">
-      <p>The debug log shows the most recent characters printed by the esp-link software itself to
+      <p>The debug log shows the most recent characters printed by the NMEA-link software itself to
       its own debug log.</p>
       <div class="pure-g">
         <p class="pure-u-1-4" style="vertical-align: baseline;width:40%">
           <a id="refresh-button" class="pure-button button-primary" href="#">Refresh</a>
-          &nbsp;<a id="reset-button" class="dbg-btn pure-button button-primary" href="#">Reset esp-link</a>
+          &nbsp;<a id="reset-button" class="dbg-btn pure-button button-primary" href="#">Reset NMEA-link</a>
         </p>
         <p class="pure-u-3-4" style="vertical-align: baseline;width:60%">
           UART debug log:
@@ -40,8 +40,8 @@
         var co = $("#console");
         co.innerHTML = "";
         ajaxSpin('POST', "/log/reset",
-          function (resp) { showNotification("Resetting esp-link"); co.textEnd = 0; fetchText(2000, false); },
-          function (s, st) { showWarning("Error resetting esp-link"); }
+          function (resp) { showNotification("Resetting NMEA-link"); co.textEnd = 0; fetchText(2000, false); },
+          function (s, st) { showWarning("Error resetting NMEA-link"); }
         );
     });
 
