@@ -13,7 +13,7 @@ input[type=checkbox] {
 }
 
 body {
-    color: #777;
+    color: #50d07d;
 }
 a:visited, a:link {
   color: #009;
@@ -23,7 +23,7 @@ a:hover {
 }
 
 .card {
-  background-color: #eee;
+  background-color: #b2cecf;
   padding: 1em;
   margin: 0.5em;
   border-radius: 0.5em;
@@ -39,7 +39,7 @@ a:hover {
 }
 .click-to-edit input, .click-to-edit textarea {
   color: black;
-  background-color: #eee;
+  background-color: #b2cecf;
   width: 100%;
 }
 .click-to-edit span, .click-to-edit div {
@@ -89,7 +89,7 @@ a:hover {
   background-color: #fff0b3;
   border-radius: 5px;
   border: 0px solid #000;
-  color: #333;
+  color: #50d07d;
   font-size: 80%;
   line-height: 110%;
   z-index: 100;
@@ -196,7 +196,7 @@ div.tt {
 
 .header {
   margin: 0;
-  color: #333;
+  color: #50d07d;
   text-align: center;
   padding: 2.5em 2em 0;
   border-bottom: 1px solid #eee;
@@ -356,11 +356,11 @@ pre.console a {
 }
 
 #menu .pure-menu ul, #menu .pure-menu .menu-item-divided {
-  border-top: 1px solid #333;
+  border-top: 1px solid #50d07d;
 }
 
 #menu .pure-menu li a:hover, #menu .pure-menu li a:focus {
-  background: #333;
+  background: #50d07d;
 }
 
 #menu .pure-menu-selected, #menu .pure-menu-heading {
