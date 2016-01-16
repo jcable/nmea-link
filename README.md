@@ -1,15 +1,8 @@
 NMEA-LINK
 ========
 
-This firmware connects an attached micro-controller to the internet using a ESP8266 Wifi module.
-It implements a number of features:
-- transparent bridge between Wifi and serial, useful for debugging or inputting into a uC
-- flash-programming attached Arduino/AVR microcontrollers, esp8266 modules, as well as
-  LPC800-series and other ARM microcontrollers via Wifi
-- built-in stk500v1 programmer for AVR uC's with optiboot: program using HTTP upload of hex file
-- outbound TCP (and thus HTTP) connections from the attached micro-controller to the internet
-- outbound REST HTTP requests from the attached micro-controller to the internet, protocol
-  based on espduino and compatible with [tuanpmt/espduino](https://github.com/tuanpmt/espduino)
+This firmware connects an attached NMEA-0183 sender and an attached NMEA-0183 listener to 
+ a wireless LAN using a ESP8266 Wifi module.
 
 This is fork of [esp-link] (https://github.com/jeelabs/esp-link).
 
