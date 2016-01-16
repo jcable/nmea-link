@@ -6,12 +6,27 @@ This firmware connects an attached NMEA-0183 sender and an attached NMEA-0183 li
 
 This is fork of [esp-link] (https://github.com/jeelabs/esp-link).
 
-NMEA-link uses
---------------
+Connecting to NMEA-0183 devices
+-------------------------------
+The primary use of this device is to relay NMEA sentences from traditional
+ devices to the wireless LAN, making them available to tablets and other devices.
+Text received on the serial port input is also copied to the serial port output
+ so NMEA-link can be inserted into an existing connection between two devices.
+The ESP-8266 has a 3.3V UART. Connect your NMEA-0183 sending device via an opto-coupler.
+ Connect your NMEA-0183 listening device via an RS-422 driver.
+
+Connecting to NMEA-link
+-----------------------
+NMEA-link listens on TCP port 10111, the registered port for NMEA devices.
+ It is intended to support multiple simultaneous TCP clients.
+All NMEA sentences received from the serial port are send to all clients.
+All text received from TCP clients is output to the serial port.
+Text received from TCP clients is not output to any TCP client so this is not a general purpose NMEA multiplexer.
 
 Hardware info
 -------------
-This firmware is designed for any esp8266 module.
+This firmware is designed for any esp8266 module. Hardware designs for a module including NMEA-0183 level converters and a 12V
+ power supply will be available here.
 
 Initial flashing
 ----------------
@@ -93,23 +108,6 @@ Follow the esp-link instructions.
 Updating the firmware over-the-air
 ---------------------
 Follow the esp-link instructions.
-
-Connecting to NMEA-0183 devices
--------------------------------
-The primary use of this device is to relay NMEA sentences from traditional
- devices to the wireless LAN, making them available to tablets and other devices.
-Text received on the serial port input is also copied to the serial port output
- so NMEA-link can be inserted into an existing connection between two devices.
-The ESP-8266 has a 3.3V UART. Connect your NMEA-0183 sending device via an opto-coupler.
- Connect your NMEA-0183 listening device via an RS-422 driver.
-
-Connecting to NMEA-link
------------------------
-NMEA-link listens on TCP port 10111, the registered port for NMEA devices.
- It is intended to support multiple simultaneous TCP clients.
-All NMEA sentences received from the serial port are send to all clients.
-All text received from TCP clients is output to the serial port.
-Text received from TCP clients is not output to any TCP client so this is not a general purpose NMEA multiplexer.
 
 Contact
 -------
