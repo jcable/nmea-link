@@ -37,6 +37,7 @@ typedef struct {
   uint8_t  mdns_enable;
   char     mdns_servername[32];           
   int8_t   timezone_offset;
+  uint16_t serbridge_port;               // serial bridge port
 } FlashConfig;
 extern FlashConfig flashConfig;
 

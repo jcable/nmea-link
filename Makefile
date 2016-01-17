@@ -73,7 +73,8 @@ LED_SERIAL_PIN      ?= 14
 CHANGE_TO_STA ?= yes
 
 # Optional Modules
-MODULES ?= mqtt rest syslog
+#MODULES ?= mqtt rest syslog
+MODULES ?= syslog
 
 # --------------- esphttpd config options ---------------
 

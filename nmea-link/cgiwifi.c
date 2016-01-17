@@ -117,7 +117,7 @@ void ICACHE_FLASH_ATTR wifiStartMDNS(struct ip_addr ip) {
     struct mdns_info *mdns_info = (struct mdns_info *)os_zalloc(sizeof(struct mdns_info));
     mdns_info->host_name = flashConfig.hostname;
     mdns_info->server_name = flashConfig.mdns_servername;
-    mdns_info->server_port = 80;
+    mdns_info->server_port = flashConfig.serbridge_port;
     mdns_info->ipAddr = ip.addr;
     espconn_mdns_init(mdns_info);    
   }
@@ -298,7 +298,7 @@ static void ICACHE_FLASH_ATTR resetTimerCb(void *arg) {
       os_timer_arm(&resetTimer, RESET_TIMEOUT, 0); // check one more time after switching to STA-only
 #endif
     }
-    log_uart(false);
+    // TODO re-enable this log_uart(false);
     // no more resetTimer at this point, gotta use physical reset to recover if in trouble
   } else {
     if (m != 3) {

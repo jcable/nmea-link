@@ -252,19 +252,25 @@ static sint8 ICACHE_FLASH_ATTR
 sendtxbuffer(serbridgeConnData *conn)
 {
     sint8 result = ESPCONN_OK;
+static char printbuf[MAX_TXBUFFER];
     if (conn->txbufferlen != 0) {
-        //os_printf("TX %p %d\n", conn, conn->txbufferlen);
+	memcpy(printbuf, conn->txbuffer,  conn->txbufferlen);
+	printbuf[conn->txbufferlen]=0;
+        os_printf("TX %p %d %s\n", conn, conn->txbufferlen, printbuf);// TODO comment this out
 	uint16_t chars_to_send = conn->txbufferlen;
         if(conn->sendlines) {
             char* p = memchr(conn->txbuffer, '\n', conn->txbufferlen);
 	    if(p == NULL) {
+		os_printf("NTX\n");
                 return result; // try again when more data
 	    }
 	    chars_to_send = p - conn->txbuffer + 1;
         }
         conn->readytosend = false;
-        result = espconn_sent(conn->conn, (uint8_t*)conn->txbuffer, chars_to_send);
-        conn->txbufferlen = 0;
+	memcpy(printbuf, conn->txbuffer,  conn->txbufferlen);
+	printbuf[conn->txbufferlen]=0;
+        os_printf("TX! %p %d %s\n", conn, conn->txbufferlen, printbuf);// TODO comment this out
+        result = espconn_send(conn->conn, (uint8_t*)conn->txbuffer, chars_to_send);
         if (result != ESPCONN_OK) {
             os_printf("sendtxbuffer: espconn_sent error %d on conn %p\n", result, conn);
             conn->txbufferlen = 0;
@@ -336,7 +342,7 @@ static void ICACHE_FLASH_ATTR
 serbridgeSentCb(void *arg)
 {
     serbridgeConnData *conn = ((struct espconn*)arg)->reverse;
-    //os_printf("Sent CB %p\n", conn);
+    os_printf("Sent CB %p\n", conn);
     if (conn == NULL) return;
     //os_printf("%d ST\n", system_get_time());
     if (conn->sentbuffer != NULL) os_free(conn->sentbuffer);
@@ -436,7 +442,7 @@ serbridgeConnectCb(void *arg)
     connData[i].readytosend = true;
     connData[i].conn_mode = cmInit;
     //connData[i].send = espbuffsend;
-    connData[i].sendlines = true;
+    connData[i].sendlines = false;
     // if it's the second port we start out in programming mode
     if (conn->proto.tcp->local_port == serbridgeConn2.proto.tcp->local_port)
         connData[i].conn_mode = cmPGMInit;
