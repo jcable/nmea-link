@@ -245,32 +245,19 @@ serbridgeRecvCb(void *arg, char *data, unsigned short len)
 }
 
 //===== UART -> TCP
+
 // Send all data in conn->txbuffer
-// returns result from espconn_sent if data in buffer or ESPCONN_OK (0)
+// returns result from espconn_send if data in buffer or ESPCONN_OK (0)
 // Use only internally from espbuffsend and serbridgeSentCb
 static sint8 ICACHE_FLASH_ATTR
 sendtxbuffer(serbridgeConnData *conn)
 {
     sint8 result = ESPCONN_OK;
-static char printbuf[MAX_TXBUFFER];
     if (conn->txbufferlen != 0) {
-	memcpy(printbuf, conn->txbuffer,  conn->txbufferlen);
-	printbuf[conn->txbufferlen]=0;
-        os_printf("TX %p %d %s\n", conn, conn->txbufferlen, printbuf);// TODO comment this out
-	uint16_t chars_to_send = conn->txbufferlen;
-        if(conn->sendlines) {
-            char* p = memchr(conn->txbuffer, '\n', conn->txbufferlen);
-	    if(p == NULL) {
-		os_printf("NTX\n");
-                return result; // try again when more data
-	    }
-	    chars_to_send = p - conn->txbuffer + 1;
-        }
+        //os_printf("TX %p %d\n", conn, conn->txbufferlen);
         conn->readytosend = false;
-	memcpy(printbuf, conn->txbuffer,  conn->txbufferlen);
-	printbuf[conn->txbufferlen]=0;
-        os_printf("TX! %p %d %s\n", conn, conn->txbufferlen, printbuf);// TODO comment this out
-        result = espconn_send(conn->conn, (uint8_t*)conn->txbuffer, chars_to_send);
+        result = espconn_send(conn->conn, (uint8_t*)conn->txbuffer, conn->txbufferlen);
+        conn->txbufferlen = 0;
         if (result != ESPCONN_OK) {
             os_printf("sendtxbuffer: espconn_sent error %d on conn %p\n", result, conn);
             conn->txbufferlen = 0;
@@ -342,7 +329,7 @@ static void ICACHE_FLASH_ATTR
 serbridgeSentCb(void *arg)
 {
     serbridgeConnData *conn = ((struct espconn*)arg)->reverse;
-    os_printf("Sent CB %p\n", conn);
+    //os_printf("Sent CB %p\n", conn);
     if (conn == NULL) return;
     //os_printf("%d ST\n", system_get_time());
     if (conn->sentbuffer != NULL) os_free(conn->sentbuffer);
@@ -441,8 +428,6 @@ serbridgeConnectCb(void *arg)
     conn->reverse = connData+i;
     connData[i].readytosend = true;
     connData[i].conn_mode = cmInit;
-    //connData[i].send = espbuffsend;
-    connData[i].sendlines = false;
     // if it's the second port we start out in programming mode
     if (conn->proto.tcp->local_port == serbridgeConn2.proto.tcp->local_port)
         connData[i].conn_mode = cmPGMInit;

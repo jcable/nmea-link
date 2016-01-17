@@ -19,11 +19,7 @@ enum connModes {
     cmTelnet,          // use telnet escape sequences for programming mode
 };
 
-struct serbridgeConnData;
-
-typedef struct serbridgeConnData serbridgeConnData;
-
-struct serbridgeConnData {
+typedef struct serbridgeConnData {
     struct espconn *conn;
     enum connModes conn_mode;     // connection mode
     uint8_t        telnet_state;
@@ -32,9 +28,7 @@ struct serbridgeConnData {
     char           *sentbuffer;   // buffer sent, awaiting callback to get freed
     uint32_t       txoverflow_at; // when the transmitter started to overflow
     bool           readytosend;   // true, if txbuffer can be sent by espconn_sent
-    bool           sendlines;     // true, if tx data should only be sent in whole lines (CR/LF)
-    //sint8          (*send)(serbridgeConnData *conn, const char *data, uint16 len);
-};
+} serbridgeConnData;
 
 // port1 is transparent&programming, second port is programming only
 void ICACHE_FLASH_ATTR serbridgeInit(int port1, int port2);
