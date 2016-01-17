@@ -13,7 +13,8 @@ input[type=checkbox] {
 }
 
 body {
-    color: #50d07d;
+  color: #ffffff;
+  background-color: #BEB9B5;
 }
 a:visited, a:link {
   color: #009;
@@ -196,11 +197,11 @@ div.tt {
 
 .header {
   margin: 0;
-  color: #50d07d;
+  color: #ffffff;
   text-align: center;
   padding: 2.5em 2em 0;
   border-bottom: 1px solid #eee;
-  background-color: #fc0;
+  background-color: #9ad3de;
 }
 .header h1 {
   margin: 0.2em 0;
@@ -214,7 +215,7 @@ div.tt {
   font: normal 800 1.5em sans-serif;
   position: relative;
   bottom: 19px;
-  color: #9d1414;
+  color: #9ad3de;
   margin-left: 3px;
 }
 

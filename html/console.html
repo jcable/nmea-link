@@ -1,11 +1,13 @@
   <div id="main" class="flex-fill flex-vbox" style="max-height:100%">
     <div class="header">
-      <h1>Microcontroller Console</h1>
+      <h1>NMEA Console</h1>
     </div>
 
     <div class="content flex-fill flex-vbox">
       <p>
+<!--
         <a id="reset-button" class="pure-button button-primary" href="#">Reset &#xb5;C</a>
+-->
         &nbsp; <a id="clear-button" class="pure-button button-primary" href="#">Clear Log</a>
         &nbsp; Baud:
         <select id="baud-sel" class="pure-button" href="#">
@@ -17,6 +19,7 @@
           <option value="38400">38400</option>
           <option value="19200">19200</option>
           <option value="9600">9600</option>
+          <option value="4800">4800</option>
         </select>
         &nbsp; Fmt: 8N1
       </p>
@@ -62,7 +65,7 @@
 <script type="text/javascript">
   onLoad(function() {
     fetchText(100, true);
-
+/*
     $("#reset-button").addEventListener("click", function(e) {
       e.preventDefault();
       var co = $("#console");
@@ -72,6 +75,7 @@
         function(s, st) { showWarning("Error resetting uC"); }
       );
     });
+*/
 
     $("#clear-button").addEventListener("click", function(e) {
         e.preventDefault();
