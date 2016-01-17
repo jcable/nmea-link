@@ -8,6 +8,21 @@
         <div class="pure-u-1 pure-u-md-1-2">
           <div class="card">
             <h1>
+              mDNS
+              <div id="mdns-spinner" class="spinner spinner-small"></div>
+            </h1>
+            <form action="#" id="mDNS-form" class="pure-form" hidden>
+              <div class="form-horizontal">
+                <input type="checkbox" name="mdns_enable"/>
+                <label>Enable mDNS</label>
+              </div>
+              <button id="mDNS-button" type="submit" class="pure-button button-primary">
+                Update mDNS settings!
+              </button>
+            </form>
+          </div>
+          <div class="card">
+            <h1>
               Syslog
               <div id="syslog-spinner" class="spinner spinner-small"></div>
             </h1>
@@ -44,27 +59,6 @@
               </div>
               <button id="Syslog-button" type="submit" class="pure-button button-primary">
                 Update Syslog settings!
-              </button>
-            </form>
-          </div>
-          <div class="card">
-            <h1>
-              mDNS
-              <div id="mdns-spinner" class="spinner spinner-small"></div>
-            </h1>
-            <form action="#" id="mDNS-form" class="pure-form" hidden>
-              <div class="form-horizontal">
-                <input type="checkbox" name="mdns_enable"/>
-                <label>Enable mDNS</label>
-              </div>
-              <br>
-              <legend>mDNS server settings</legend>
-              <div class="pure-form-stacked">
-                <label>Server Name</label>
-                <input type="text" name="mdns_servername"/>
-              </div>
-              <button id="mDNS-button" type="submit" class="pure-button button-primary">
-                Update mDNS settings!
               </button>
             </form>
           </div>
