@@ -350,9 +350,6 @@ console_process(char *buf, short len)
     for (short i=0; i<len; i++)
         console_write_char(buf[i]);
     if(flashConfig.udp_enable) {
-#ifdef SERBR_DBG
-    os_printf("Serbridge udp send\n");
-#endif
         espconn_send(&udpConn, (uint8_t*)buf, len);
     }
     // push the buffer into each open connection
