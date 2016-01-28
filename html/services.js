@@ -50,15 +50,27 @@ function displayServices(data) {
   $("#syslog-spinner").setAttribute("hidden", "");
   $("#sntp-spinner").setAttribute("hidden", "");
   $("#mdns-spinner").setAttribute("hidden", "");
+  $("#udp-spinner").setAttribute("hidden", "");
 
   $("#Syslog-form").removeAttribute("hidden");
   $("#SNTP-form").removeAttribute("hidden");
   $("#mDNS-form").removeAttribute("hidden");
+  $("#udp-form").removeAttribute("hidden");
 
   var i, inputs = $("input");
   for (i = 0; i < inputs.length; i++) {
     if (inputs[i].name == "mdns_enable") inputs[i].onclick = function () { setMDNS(this.checked) };
+    if (inputs[i].name == "udp_enable") inputs[i].onclick = function () { setUDP(this.checked) };
   }
+}
+
+function setUDP(v) {
+  ajaxSpin("POST", "/services/update?udp_enable=" + (v ? 1 : 0), function () {
+    showNotification("udp broadcast is now " + (v ? "enabled" : "disabled"));
+  }, function () {
+    showWarning("Enable/disable failed");
+    window.setTimeout(fetchServices, 100);
+  });
 }
 
 function setMDNS(v) {

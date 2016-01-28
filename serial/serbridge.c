@@ -14,6 +14,10 @@
 
 #define SKIP_AT_RESET
 
+uint8_t udp_task;
+uint8_t *udp_pending;
+int udp_pending_len;
+static struct espconn udpConn;
 static struct espconn serbridgeConn1; // plain bridging port
 static struct espconn serbridgeConn2; // programming port
 static esp_tcp serbridgeTcp1, serbridgeTcp2;
@@ -345,10 +349,16 @@ console_process(char *buf, short len)
     // push buffer into web-console
     for (short i=0; i<len; i++)
         console_write_char(buf[i]);
+    if(flashConfig.udp_enable) {
+#ifdef SERBR_DBG
+    os_printf("Serbridge udp send\n");
+#endif
+        espconn_send(&udpConn, (uint8_t*)buf, len);
+    }
     // push the buffer into each open connection
     for (short i=0; i<MAX_CONN; i++) {
         if (connData[i].conn) {
-            espbuffsend(&connData[i], buf, len);
+            connData[i].send(&connData[i], buf, len);
         }
     }
 }
@@ -431,6 +441,7 @@ serbridgeConnectCb(void *arg)
     // if it's the second port we start out in programming mode
     if (conn->proto.tcp->local_port == serbridgeConn2.proto.tcp->local_port)
         connData[i].conn_mode = cmPGMInit;
+    connData[i].send = espbuffsend;
 
     espconn_regist_recvcb(conn, serbridgeRecvCb);
     espconn_regist_disconcb(conn, serbridgeDisconCb);
@@ -439,6 +450,7 @@ serbridgeConnectCb(void *arg)
 
     espconn_set_opt(conn, ESPCONN_REUSEADDR|ESPCONN_NODELAY);
 }
+
 
 //===== Initialization
 
@@ -476,6 +488,36 @@ serbridgeInitPins()
     if (mcu_isp_pin >= 0)   makeGpio(mcu_isp_pin);
 }
 
+void ICACHE_FLASH_ATTR
+udp_broadcast_init()
+{
+    if(flashConfig.udp_enable) {
+#ifdef SERBR_DBG
+    os_printf("Serbridge : enable udp\n");
+#endif
+        udpConn.proto.udp = (esp_udp*)os_zalloc(sizeof(esp_udp));
+        udpConn.type = ESPCONN_UDP;
+        udpConn.proto.udp->remote_port = flashConfig.udp_port;
+        struct ip_info info;
+        if(wifi_get_ip_info(STATION_IF, &info)) {
+            uint32_t nw = info.ip.addr & info.netmask.addr;
+            uint32_t bc = nw | ~info.netmask.addr;
+            os_memcpy(udpConn.proto.udp->remote_ip, &bc, 4);
+        }
+        udpConn.proto.udp->local_port = espconn_port();
+        //espconn_regist_recvcb(&udpConn, udp_recv_cb);
+        //espconn_regist_sentcb(&udpConn, udp_sent_cb);
+        //udp_task = register_usr_task(udp_send_event);
+        //wifi_set_broadcast_if(STATIONAP_MODE); only sending, not listening
+        espconn_create(&udpConn);
+    }
+    else {
+#ifdef SERBR_DBG
+    os_printf("Serbridge : disable udp\n");
+#endif
+    }
+}
+
 // Start transparent serial bridge TCP server on specified port (typ. 23)
 void ICACHE_FLASH_ATTR
 serbridgeInit(int port1, int port2)
@@ -507,4 +549,6 @@ serbridgeInit(int port1, int port2)
     espconn_accept(&serbridgeConn2);
     espconn_tcp_set_max_con_allow(&serbridgeConn2, MAX_CONN);
     espconn_regist_time(&serbridgeConn2, SER_BRIDGE_TIMEOUT, 0);
+
+    udp_broadcast_init();
 }

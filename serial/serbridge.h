@@ -17,6 +17,7 @@ enum connModes {
     cmTransparent,     // transparent mode
     cmPGM,             // Arduino/AVR/ARM programming mode
     cmTelnet,          // use telnet escape sequences for programming mode
+    cmUdp,             // transparent udp with whole sentences per datagram
 };
 
 typedef struct serbridgeConnData {
@@ -28,6 +29,7 @@ typedef struct serbridgeConnData {
     char           *sentbuffer;   // buffer sent, awaiting callback to get freed
     uint32_t       txoverflow_at; // when the transmitter started to overflow
     bool           readytosend;   // true, if txbuffer can be sent by espconn_sent
+    sint8 (*send)(struct serbridgeConnData*, const char*, uint16);
 } serbridgeConnData;
 
 // port1 is transparent&programming, second port is programming only

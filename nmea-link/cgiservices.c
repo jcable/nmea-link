@@ -6,6 +6,8 @@
 #include "sntp.h"
 #include "cgimqtt.h"
 
+void ICACHE_FLASH_ATTR udp_broadcast_init();
+
 #ifdef CGISERVICES_DBG
 #define DBG(format, ...) do { os_printf(format, ## __VA_ARGS__); } while(0)
 #else
@@ -117,7 +119,9 @@ int ICACHE_FLASH_ATTR cgiServicesInfo(HttpdConnData *connData) {
       "\"timezone_offset\": %d, "
       "\"sntp_server\": \"%s\", "
       "\"mdns_enable\": \"%s\", "
-      "\"mdns_servername\": \"%s\""
+      "\"mdns_servername\": \"%s\", "
+      "\"udp_enable\": \"%s\", "
+      "\"udp_port\": \"%d\" "
     " }",    
     flashConfig.syslog_host,
     flashConfig.syslog_minheap,
@@ -127,7 +131,9 @@ int ICACHE_FLASH_ATTR cgiServicesInfo(HttpdConnData *connData) {
     flashConfig.timezone_offset,
     flashConfig.sntp_server,
     flashConfig.mdns_enable ? "enabled" : "disabled",
-    flashConfig.mdns_servername
+    flashConfig.mdns_servername,
+    flashConfig.udp_enable ? "enabled" : "disabled",
+    flashConfig.udp_port
     );
 
   jsonHeader(connData, 200);
@@ -163,6 +169,21 @@ int ICACHE_FLASH_ATTR cgiServicesSet(HttpdConnData *connData) {
 
   if (sntp > 0) {
     cgiServicesSNTPInit();
+  }
+
+  int8_t udp = 0;
+  udp |= getBoolArg(connData, "udp_enable", &flashConfig.udp_enable);
+  if (udp < 0) return HTTPD_CGI_DONE;
+  udp |= getUInt16Arg(connData, "udp_port", &flashConfig.udp_port);
+  if (udp < 0) return HTTPD_CGI_DONE;
+  if (udp > 0) {
+    if (flashConfig.udp_enable){
+      DBG("Services: UDP broadcast Enabled\n");
+    }
+    else {
+      DBG("Services: UDP broadcast Disabled\n");
+    }
+    udp_broadcast_init();
   }
 
   int8_t mdns = 0;

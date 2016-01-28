@@ -11,6 +11,22 @@
              The NMEA server listens on port 10110.
           </div>
           <div class="card">
+            <h1>NMEA UDP broadcast
+              <div id="udp-spinner" class="spinner spinner-small"></div>
+            </h1>
+            <form action="#" id="udp-form" class="pure-form" hidden>
+              <div class="form-horizontal">
+                <input type="checkbox" name="udp_enable"/>
+                <label>Enable NMEA udp broadcast</label>
+                <input type="text" name="udp_port"/>
+                <label>set destination port</label>
+              </div>
+              <button id="udp-button" type="submit" class="pure-button button-primary">
+                Update udp settings!
+              </button>
+            </form>
+          </div>
+          <div class="card">
             <h1>
               mDNS
               <div id="mdns-spinner" class="spinner spinner-small"></div>
@@ -22,24 +38,6 @@
               </div>
               <button id="mDNS-button" type="submit" class="pure-button button-primary">
                 Update mDNS settings!
-              </button>
-            </form>
-          </div>
-          <div class="card">
-            <h1>
-              SNTP
-              <div id="sntp-spinner" class="spinner spinner-small"></div>
-            </h1>
-            <form action="#" id="SNTP-form" class="pure-form" hidden>
-              <legend>SNTP server settings</legend>
-              <div class="pure-form-stacked">
-                <label>Timezone Offset</label>
-                <input type="text" name="timezone_offset" />
-                <label>SNTP Server</label>
-                <input type="text" name="sntp_server" />
-              </div>
-              <button id="SNTP-button" type="submit" class="pure-button button-primary">
-                Update SNTP settings!
               </button>
             </form>
           </div>
@@ -86,6 +84,24 @@
               </button>
             </form>
           </div>
+          <div class="card">
+            <h1>
+              SNTP
+              <div id="sntp-spinner" class="spinner spinner-small"></div>
+            </h1>
+            <form action="#" id="SNTP-form" class="pure-form" hidden>
+              <legend>SNTP server settings</legend>
+              <div class="pure-form-stacked">
+                <label>Timezone Offset</label>
+                <input type="text" name="timezone_offset" />
+                <label>SNTP Server</label>
+                <input type="text" name="sntp_server" />
+              </div>
+              <button id="SNTP-button" type="submit" class="pure-button button-primary">
+                Update SNTP settings!
+              </button>
+            </form>
+          </div>
         </div>
       </div>
     </div>
@@ -99,6 +115,7 @@ onLoad(function() {
   bnd($("#Syslog-form"), "submit", changeServices);
   bnd($("#SNTP-form"), "submit", changeServices);
   bnd($("#mDNS-form"), "submit", changeServices);
+  bnd($("#udp-form"), "submit", changeServices);
 });
 </script>
 </body></html>

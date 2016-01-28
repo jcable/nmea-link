@@ -31,7 +31,9 @@ FlashConfig flashDefault = {
   .sntp_server  = "us.pool.ntp.org\0",
   .syslog_host = "\0", .syslog_minheap = 8192, .syslog_filter = 7, .syslog_showtick = 1, .syslog_showdate = 0,
   .mdns_enable = 1, .mdns_servername = "nmea-0183\0", .timezone_offset = 0,
-  .serbridge_port = 10110
+  .serbridge_port = 10110,
+  .udp_enable = 0,
+  .udp_port = 2000
 };
 
 typedef union {
