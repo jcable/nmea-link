@@ -4,7 +4,6 @@
 #include "uart.h"
 #include "cgi.h"
 #include "uart.h"
-#include "serbridge.h"
 #include "config.h"
 #include "console.h"
 
@@ -23,8 +22,12 @@ static char console_buf[BUF_MAX];
 static int console_wr, console_rd;
 static int console_pos; // offset since reset of buffer
 
-static void ICACHE_FLASH_ATTR
-console_write(char c) {
+void ICACHE_FLASH_ATTR consoleInit() {
+  console_rd = console_wr = console_pos = 0;
+}
+
+void ICACHE_FLASH_ATTR
+console_write_char(char c) {
   console_buf[console_wr] = c;
   console_wr = (console_wr+1) % BUF_MAX;
   if (console_wr == console_rd) {
@@ -34,27 +37,18 @@ console_write(char c) {
   }
 }
 
-#if 0
-// return previous character in console, 0 if at start
-static char ICACHE_FLASH_ATTR
-console_prev(void) {
-  if (console_wr == console_rd) return 0;
-  return console_buf[(console_wr-1+BUF_MAX)%BUF_MAX];
-}
-#endif
-
 void ICACHE_FLASH_ATTR
-console_write_char(char c) {
-  //if (c == '\n' && console_prev() != '\r') console_write('\r'); // does more harm than good
-  console_write(c);
+console_send(void *nu, const char *data, uint16 len) {
+    (void)nu;
+    for (size_t i=0; i<len; i++)
+        console_write_char(data[i]);
 }
 
 int ICACHE_FLASH_ATTR
 ajaxConsoleReset(HttpdConnData *connData) {
   if (connData->conn==NULL) return HTTPD_CGI_DONE; // Connection aborted. Clean up.
   jsonHeader(connData, 200);
-  console_rd = console_wr = console_pos = 0;
-  serbridgeReset();
+  consoleInit();
   return HTTPD_CGI_DONE;
 }
 
@@ -144,10 +138,4 @@ ajaxConsole(HttpdConnData *connData) {
   httpdSend(connData, buff, len);
   return HTTPD_CGI_DONE;
 }
-
-void ICACHE_FLASH_ATTR consoleInit() {
-  console_wr = 0;
-  console_rd = 0;
-}
-
 

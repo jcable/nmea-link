@@ -7,7 +7,7 @@
 #include "config.h"
 #include "uart.h"
 #include "stk500.h"
-#include "serbridge.h"
+//#include "serbridge.h"
 #include "serled.h"
 
 #define SYNC_TIMEOUT  4800   // to achieve sync, in milliseconds
@@ -73,6 +73,9 @@ static bool programPage(void);
 static void armTimer(void);
 static void initBaud(void);
 
+void (*programmingCB)(char *buffer, short length) = NULL;
+
+
 static void ICACHE_FLASH_ATTR optibootInit() {
   progState = stateSync;
   syncCnt = 0;
@@ -133,7 +136,7 @@ int ICACHE_FLASH_ATTR cgiOptibootSync(HttpdConnData *connData) {
     baudRate = flashConfig.baud_rate;
     programmingCB = optibootUartRecv;
     initBaud();
-    serbridgeReset();
+    //serbridgeReset();
 #if DBG_GPIO5
     makeGpio(5);
     gpio_output_set(0, (1<<5), (1<<5), 0); // output 0
@@ -524,7 +527,7 @@ static void ICACHE_FLASH_ATTR optibootTimerCB(void *arg) {
       if (syncCnt % (BAUD_INTERVAL/SYNC_INTERVAL) == 0) {
         // time to switch baud rate and issue a reset
         setBaud();
-        serbridgeReset();
+        //serbridgeReset();
         // no point sending chars if we just switched
       } else {
         //uart0_write_char(STK_GET_SYNC);

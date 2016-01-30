@@ -141,7 +141,7 @@ uart0_write_char(char c)
  * Returns      :
 *******************************************************************************/
 void ICACHE_FLASH_ATTR
-uart0_tx_buffer(char *buf, uint16 len)
+uart0_tx_buffer(const char *buf, uint16 len)
 {
   uint16 i;
 

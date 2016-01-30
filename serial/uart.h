@@ -11,7 +11,7 @@ typedef void (*UartRecv_cb)(char *buf, short len);
 void uart_init(UartBautRate uart0_br, UartBautRate uart1_br);
 
 // Transmit a buffer of characters on UART0
-void uart0_tx_buffer(char *buf, uint16 len);
+void uart0_tx_buffer(const char *buf, uint16 len);
 
 void uart0_write_char(char c);
 STATUS uart_tx_one_char(uint8 uart, uint8 c);

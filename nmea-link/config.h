@@ -16,7 +16,7 @@ typedef struct {
   int8_t   swap_uart;                  // swap uart0 to gpio 13&15
   uint8_t  tcp_enable, rssi_enable;    // TCP client settings
   char     api_key[48];                // RSSI submission API key (Grovestreams for now)
-  uint8_t  slip_enable, mqtt_enable,   // SLIP protocol, MQTT client
+  uint8_t  nu,mqtt_enable,             // (not used - was slip) MQTT client
            mqtt_status_enable,         // MQTT status reporting
            mqtt_timeout,               // MQTT send timeout
            mqtt_clean_session;         // MQTT clean session

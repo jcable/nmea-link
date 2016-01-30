@@ -3,8 +3,8 @@
 
 #include "httpd.h"
 
+void ICACHE_FLASH_ATTR console_send(void *nu, const char *data, uint16 len);
 void consoleInit(void);
-void ICACHE_FLASH_ATTR console_write_char(char c);
 int ajaxConsole(HttpdConnData *connData);
 int ajaxConsoleReset(HttpdConnData *connData);
 int ajaxConsoleBaud(HttpdConnData *connData);

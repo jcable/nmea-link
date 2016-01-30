@@ -21,7 +21,7 @@ FlashConfig flashDefault = {
   .swap_uart    = 0,
   .tcp_enable   = 1, .rssi_enable = 0,
   .api_key      = "",
-  .slip_enable  = 0, .mqtt_enable = 0, .mqtt_status_enable = 0,
+  .mqtt_enable = 0, .mqtt_status_enable = 0,
   .mqtt_timeout = 2, .mqtt_clean_session = 1,
   .mqtt_port    = 1883, .mqtt_keepalive = 60,
   .mqtt_host    = "\0", .mqtt_clientid = "\0",

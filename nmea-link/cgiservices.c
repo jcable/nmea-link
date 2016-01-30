@@ -6,7 +6,7 @@
 #include "sntp.h"
 #include "cgimqtt.h"
 
-void ICACHE_FLASH_ATTR udp_broadcast_init();
+void ICACHE_FLASH_ATTR udpBroadcastInit();
 
 #ifdef CGISERVICES_DBG
 #define DBG(format, ...) do { os_printf(format, ## __VA_ARGS__); } while(0)
@@ -70,7 +70,6 @@ int ICACHE_FLASH_ATTR cgiSystemInfo(HttpdConnData *connData) {
       "\"size\": \"%s\", "
       "\"id\": \"0x%02lX 0x%04lX\", "
       "\"partition\": \"%s\", "
-      "\"slip\": \"%s\", "
       "\"mqtt\": \"%s/%s\", "
       "\"baud\": \"%ld\", "
       "\"description\": \"%s\""
@@ -81,7 +80,6 @@ int ICACHE_FLASH_ATTR cgiSystemInfo(HttpdConnData *connData) {
     flash_maps[system_get_flash_size_map()],
     fid & 0xff, (fid & 0xff00) | ((fid >> 16) & 0xff),
     part_id ? "user2.bin" : "user1.bin",
-    flashConfig.slip_enable ? "enabled" : "disabled",
     flashConfig.mqtt_enable ? "enabled" : "disabled",
     mqttState(),
     flashConfig.baud_rate,
@@ -183,7 +181,7 @@ int ICACHE_FLASH_ATTR cgiServicesSet(HttpdConnData *connData) {
     else {
       DBG("Services: UDP broadcast Disabled\n");
     }
-    udp_broadcast_init();
+    udpBroadcastInit();
   }
 
   int8_t mdns = 0;
