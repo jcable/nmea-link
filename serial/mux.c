@@ -7,7 +7,7 @@
 #include "udp.h"
 #include "tcp.h"
 #include "crc16.h"
-#include "serbridge.h"
+#include "mux.h"
 #include "serled.h"
 #include "config.h"
 #include "console.h"

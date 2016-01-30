@@ -22,7 +22,7 @@
 #include "auth.h"
 #include "espfs.h"
 #include "uart.h"
-#include "serbridge.h"
+#include "mux.h"
 #include "status.h"
 #include "serled.h"
 #include "console.h"

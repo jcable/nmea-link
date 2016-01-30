@@ -5,7 +5,7 @@
 #include "config.h"
 #include "serled.h"
 #include "status.h"
-#include "serbridge.h"
+#include "mux.h"
 
 #if 0
 static char *map_names[] = {

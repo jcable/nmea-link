@@ -1,7 +1,7 @@
 // Copyright 2015 by Thorsten von Eicken, see LICENSE.txt
 
 #include "tcp.h"
-#include "serbridge.h"
+#include "mux.h"
 #include "linebuf.h"
 
 static espconn serverConn;
