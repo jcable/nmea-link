@@ -1,22 +1,27 @@
 #include "linebuf.h"
 
-struct control_block *new_lb(void* o, int(*send)(void*,uint8_t*,size_t)) {
-    struct control_block *cb = (struct control_block *)os_malloc(sizeof(struct control_block));
+struct lb_control_block *new_lb(MuxData* mux, uint8_t sid) {
+    struct lb_control_block *cb = (struct lb_control_block *)os_malloc(sizeof(struct lb_control_block));
+    if(cb == NULL) {
+      os_printf("linebuf: out of memory");
+      return NULL;
+    }
     cb->buf = NULL;
     cb->max = DEFAULT_BUF_SIZE;
-    cb->outp = o;
-    cb->send = send;
+    cb->mux = mux;
+    cb->source_id = sid;
     return cb;
 }
 
-void init_lb(struct control_block *cb, size_t len) {
+void init_lb(struct lb_control_block *cb, size_t len) {
     if(len>cb->max) cb->max=len;
     cb->buf = (uint8_t*)os_malloc(cb->max);
     cb->n = 0;
 }
 
 void lb_send(void* vcb, const char *data, unsigned short n) {
-    struct control_block *cb = (struct control_block*)vcb;
+    struct lb_control_block *cb = (struct lb_control_block*)vcb;
+    os_printf("lb_send %d bytes, %d already in buff\n", n, cb->n);
     uint8_t *b = (uint8_t*)data;
     uint8_t *p = b;
     uint8_t *q = p+n-1;
@@ -31,10 +36,14 @@ void lb_send(void* vcb, const char *data, unsigned short n) {
             int newn = p-b;
             int len = cb->n + newn;
             if(len>0) {
-                uint8_t *r = (uint8_t*)os_malloc(len);
-                for(int i=0; i<cb->n; i++) r[i]=cb->buf[i];
-                for(int i=cb->n; i<len; i++) r[i]=b[i-cb->n];
-                cb->send(cb->outp, r, len);
+                mux_buf *mb = (mux_buf*)os_malloc(sizeof(mux_buf));
+                mb->data = (uint8_t*)os_malloc(len);
+                mb->len = len;
+                mb->source_id = cb->source_id;
+                for(int i=0; i<cb->n; i++) mb->data[i]=cb->buf[i];
+                for(int i=cb->n; i<len; i++) mb->data[i]=b[i-cb->n];
+		os_printf("lb_send sending merged %d bytes\n", len);
+                mux_write(cb->mux, mb);
                 m -= newn;
             }
             // free cb->buf
@@ -86,6 +95,12 @@ void lb_send(void* vcb, const char *data, unsigned short n) {
         m = 0;
     }
     // send to end of last complete line
-    if(m>0)
-        cb->send(cb->outp, p, m);
+    if(m>0) {
+	os_printf("lb_send sending %d bytes\n", m);
+        mux_buf *mb = (mux_buf*)os_malloc(sizeof(mux_buf));
+        mb->data = p; // TODO where does this buffer get freed?
+        mb->len = m;
+        mb->source_id = cb->source_id;
+        mux_write(cb->mux, mb);
+    }
 }

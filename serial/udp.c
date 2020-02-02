@@ -6,17 +6,20 @@ static struct espconn udpConn;
 static void ICACHE_FLASH_ATTR
 udpSentCb(void *arg)
 {
+    os_printf("udp: data sent\n");
 }
 
 //callback when data received
 static void ICACHE_FLASH_ATTR
 udpRecvCb(void *arg, char *pdata, unsigned short len)
 {
+    os_printf("udp: data received\n");
 }
 
 void ICACHE_FLASH_ATTR
 udp_broadcast_send(void *conn, const char *data, uint16 len)
 {
+    //os_printf("udp: send\n");
     espconn_send(&udpConn, (uint8_t*)data, len);
 }
 
@@ -24,7 +27,7 @@ espconn* ICACHE_FLASH_ATTR
 udpBroadcastInit(int port)
 {
 #ifdef SERBR_DBG
-    os_printf("Serbridge : enable udp\n");
+    //os_printf("Mux: enable udp\n");
 #endif
     udpConn.proto.udp = (esp_udp*)os_zalloc(sizeof(esp_udp));
     udpConn.type = ESPCONN_UDP;

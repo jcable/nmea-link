@@ -40,6 +40,7 @@ console_write_char(char c) {
 void ICACHE_FLASH_ATTR
 console_send(void *nu, const char *data, uint16 len) {
     (void)nu;
+    os_printf("console: data sent\n");
     for (size_t i=0; i<len; i++)
         console_write_char(data[i]);
 }

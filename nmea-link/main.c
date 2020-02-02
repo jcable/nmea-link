@@ -159,7 +159,7 @@ void user_init(void) {
   httpdInit(builtInUrls, 80);
   // init the wifi-serial transparent bridge (port 10110)
   if(flashConfig.serbridge_port == 0) flashConfig.serbridge_port = 10110;
-  serbridgeInit(flashConfig.serbridge_port);
+  muxInit(flashConfig.serbridge_port);
   uart_add_recv_cb(&serbridgeUartCb);
 #ifdef SHOW_HEAP_USE
   os_timer_disarm(&prHeapTimer);

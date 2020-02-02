@@ -11,10 +11,10 @@ static esp_tcp serverTcp;
 static void ICACHE_FLASH_ATTR
 tcpClientRecvCb(void *arg, char *data, unsigned short len)
 {
-    serbridgeConnData *conn = ((espconn*)arg)->reverse;
+    MuxOpData *conn = ((espconn*)arg)->reverse;
     //os_printf("Receive callback on conn %p\n", conn);
     if (conn == NULL) return;
-    conn->recv(conn->recv_conn, data, len);
+    lb_send(conn->recv_data, data, len);
 }
 
 //===== UART -> TCP
@@ -23,7 +23,7 @@ tcpClientRecvCb(void *arg, char *data, unsigned short len)
 // returns result from espconn_send if data in buffer or ESPCONN_OK (0)
 // Use only internally from espbuffsend and tcpClientSentCb
 static sint8 ICACHE_FLASH_ATTR
-sendtxbuffer(serbridgeConnData *conn)
+sendtxbuffer(MuxOpData *conn)
 {
     sint8 result = ESPCONN_OK;
     if (conn->txbufferlen != 0) {
@@ -52,14 +52,14 @@ sendtxbuffer(serbridgeConnData *conn)
 static void ICACHE_FLASH_ATTR
 espbuffsend(void *vconn, const char *data, uint16 len)
 {
-    serbridgeConnData *conn = (serbridgeConnData*)vconn;
+    MuxOpData *conn = (MuxOpData*)vconn;
 
     if (conn->txbufferlen >= MAX_TXBUFFER) goto overflow;
 
     // make sure we indeed have a buffer
     if (conn->txbuffer == NULL) conn->txbuffer = os_zalloc(MAX_TXBUFFER);
     if (conn->txbuffer == NULL) {
-        os_printf("espbuffsend: cannot alloc tx buffer\n");
+        os_printf("Mux:tcp: cannot alloc tx buffer\n");
         //return -128;
     }
 
@@ -88,13 +88,13 @@ overflow:
         // we've already been overflowing
         if (system_get_time() - conn->txoverflow_at > 10*1000*1000) {
             // no progress in 10 seconds, kill the connection
-            os_printf("serbridge: killing overlowing stuck conn %p\n", conn);
+            os_printf("mux:tcp: killing overlowing stuck conn %p\n", conn);
             espconn_disconnect(conn->conn);
         }
         // else be silent, we already printed an error
     } else {
         // print 1-time message and take timestamp
-        os_printf("serbridge: txbuffer full, conn %p\n", conn);
+        os_printf("mux:tcp: txbuffer full, conn %p\n", conn);
         conn->txoverflow_at = system_get_time();
     }
     //return -128;
@@ -104,7 +104,7 @@ overflow:
 static void ICACHE_FLASH_ATTR
 tcpClientSentCb(void *arg)
 {
-    serbridgeConnData *conn = ((espconn*)arg)->reverse;
+    MuxOpData *conn = ((espconn*)arg)->reverse;
     //os_printf("Sent CB %p\n", conn);
     if (conn == NULL) return;
     //os_printf("%d ST\n", system_get_time());
@@ -120,7 +120,7 @@ tcpClientSentCb(void *arg)
 static void ICACHE_FLASH_ATTR
 tcpClientDisconCb(void *arg)
 {
-    serbridgeConnData *conn = ((espconn*)arg)->reverse;
+    MuxOpData *conn = ((espconn*)arg)->reverse;
     if (conn == NULL) return;
     // Free buffers
     if (conn->sentbuffer != NULL) os_free(conn->sentbuffer);
@@ -135,7 +135,7 @@ tcpClientDisconCb(void *arg)
 static void ICACHE_FLASH_ATTR
 tcpClientResetCb(void *arg, sint8 err)
 {
-    os_printf("serbridge: connection reset err=%d\n", err);
+    os_printf("mux:tcp: connection reset err=%d\n", err);
     tcpClientDisconCb(arg);
 }
 
@@ -145,11 +145,16 @@ tcpClientConnectCb(void *arg)
 {
     espconn *conn = arg;
 
-    if(allocateConnectionRecord(conn, espbuffsend, new_mux_src(), lb_send) == -1) {
+    int r = new_mux_dest();
+    if(r==-1) {
+	os_printf("tcp: out of mem");
         espconn_disconnect(conn);
         return;
     }
-
+    uint8_t sid = (uint8_t)r;
+    MuxOpData *mod = getConnData(sid);
+    mod->recv_data = new_lb(&mux,sid);
+    setConnectionRecord(sid, conn, espbuffsend);
     espconn_regist_recvcb(conn, tcpClientRecvCb);
     espconn_regist_disconcb(conn, tcpClientDisconCb);
     espconn_regist_reconcb(conn, tcpClientResetCb);
