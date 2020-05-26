@@ -25,8 +25,12 @@ Text received from TCP clients is not output to any TCP client so this is not a 
 
 Hardware info
 -------------
-This firmware is designed for any esp8266 module. Hardware designs for a module including NMEA-0183 level converters and a 12V
- power supply will be available here.
+This firmware is designed for any esp8266 module. 
+
+Here is a schematic for a module including NMEA-0183 level converters and a 12V power supply. Inputs use optical switches and its not easy to get the levels right.
+
+![Schematic](nmea-link.svg)
+
 
 Initial flashing
 ----------------
